@@ -16,7 +16,6 @@ import task.*;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -37,7 +36,8 @@ public class Controller implements Initializable {
     private Thread task;
 
     public void initialize(URL location, ResourceBundle resources) {
-        DBinit.init();
+        // 界面初始化时，需要初始化数据库及表
+        DBInit.init();
         // 添加搜索框监听器，内容改变时执行监听事件
         searchField.textProperty().addListener(new ChangeListener<String>() {
 
@@ -46,10 +46,11 @@ public class Controller implements Initializable {
             }
         });
     }
-    /*
-    点击"选择目录"按钮发生的事件方法
-     */
 
+    /**
+     * 点击“选择目录”按钮，发生的事件方法
+     * @param event
+     */
     public void choose(Event event) {
         // 选择文件目录
         DirectoryChooser directoryChooser=new DirectoryChooser();
@@ -59,26 +60,25 @@ public class Controller implements Initializable {
             return;
         // 获取选择的目录路径，并显示
         String path = file.getPath();
-        // TODO
         srcDirectory.setText(path);
-        if(task!=null){
+        // 选择了目录，就需要执行目录的扫描任务：讲该目录下所有的子文件和子文件夹都扫描出来
+        if(task != null){
             task.interrupt();
         }
-
-        //选择了目录,就需要执行扫描任务;该目录下所有的子文件和子文件夹都扫描出来
         task = new Thread(new Runnable() {
             @Override
             public void run() {
+                // 文件扫描回调接口，做文件夹下一级子文件和子文件夹保存数据库的操作
                 ScanCallback callback = new FileSave();
-                FileScanner scanner = new FileScanner(callback);//为了提高效率,多线程执行扫描任务
+                FileScanner scanner = new FileScanner(callback);// 传入扫描任务类
                 try {
-                    System.out.println("执行文件扫描任务"+path);
-                    scanner.scan(path);
-                    //等待文件扫描任务执行完毕
-                    scanner.waitFinsh();
-                    System.out.println("执行完毕,刷新表格");
-                    //TODO
-                    //刷新表格,将扫描出来的子文件,子文件都显示在表格里
+                    System.out.println("执行文件扫描任务");
+                    scanner.scan(path);// 为了提高效率，多线程执行扫描任务(根目录)
+                    // 等待文件扫描任务执行完毕，waitFinish()需要阻塞等待
+                    System.out.println("等待扫描任务结束："+path);
+                    scanner.waitFinish();
+                    System.out.println("任务执行完毕，刷新表格");
+                    // 刷新表格：将扫描出来的子文件，子文件夹都展示在表格里边
                     freshTable();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -87,16 +87,23 @@ public class Controller implements Initializable {
         });
         task.start();
     }
+
     // 刷新表格数据
     private void freshTable(){
         ObservableList<FileMeta> metas = fileTable.getItems();
         metas.clear();
-        // TODO
+        // 如果选择了某个目录，代表需要再根据搜索框的内容，来进行数据库文件信息的查询
         String dir = srcDirectory.getText();
         if(dir != null && dir.trim().length() != 0){
             String content = searchField.getText();
-            List<FileMeta> fileMetas = FileSearch.search(dir,content);
+            // 提供数据库的查询方法
+            List<FileMeta> fileMetas = FileSearch.search(dir, content);
+            // Collection--->List/Set--->ArrayList+LinkedList/HashSet+TreeSet
+            // Map--->HashMap/HashTable/TreeMap
             metas.addAll(fileMetas);
         }
+
+        // --->方法返回后，javafx表单做什么？
+        // 通过反射获取fileMeta类型中的属性（app.fxml文件中定义的属性）
     }
 }

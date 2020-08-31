@@ -8,44 +8,77 @@ import java.util.Date;
 import java.util.Objects;
 
 public class FileMeta {
-    private String name;//文件名称
-    private String path;//文件所在的父目录路径
-    private Long size;//文件大小
-    private Date lastModified;//文件上次修改时间
-    private String sizeText;//给客户端控件使用,和app.xml中保持一致
-    private String lastModifiedText;//和app.xml保持一致
-    private Boolean isDriectory;
+    // 文件名称
+    private String name;
+    // 文件所在的父目录的路径
+    private String path;
+    // 文件大小
+    private Long size;
+    // 文件上次修改时间
+    private Date lastModified;
+    // 是否是文件夹
+    private Boolean isDirectory;
+    // 给客户端控件使用，和app.fxml中定义的名称要一致
+    private String sizeText;
+    // 和app.fxml定义的一致
+    private String lastModifiedText;
+    // 文件名拼音
     private String pinyin;
-    private String pinyinFirst;//文件拼音首字母
-
-    //通过文件设置属性
+    // 文件名拼音首字母
+    private String pinyinFirst;
+    // 通过文件设置属性
     public FileMeta(File file){
-        this(file.getName(),file.getPath(),file.isDirectory(),file.length(),new Date(file.lastModified()));
+        this(file.getName(), file.getParent(), file.isDirectory(), file.length(),
+                new Date(file.lastModified()));
     }
-
-    //通过数据库获取数据设置FileMate
-    public FileMeta(String name,String path,boolean isDriectory,long size,Date lastModified){
+    // 通过数据库获取的数据设置FileMeta
+    public FileMeta(String name, String path, Boolean isDirectory, long size,
+                    Date lastModified){
         this.name = name;
         this.path = path;
+        this.isDirectory = isDirectory;
         this.size = size;
-        this.isDriectory = isDriectory;
         this.lastModified = lastModified;
         if(PinyinUtil.containsChinese(name)){
             String[] pinyins = PinyinUtil.get(name);
             pinyin = pinyins[0];
             pinyinFirst = pinyins[1];
         }
-        //各户端表格控件文件大小,文件上次修改时间的设置
-        sizeText = Util.pareseSize(size);
+        // 客户端表格控件文件大小，文件上次修改时间的设置
+        sizeText = Util.parseSize(size);
         lastModifiedText = Util.parseDate(lastModified);
     }
 
-    public Boolean getDriectory() {
-        return isDriectory;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileMeta meta = (FileMeta) o;
+        return Objects.equals(name, meta.name) &&
+                Objects.equals(path, meta.path) &&
+                Objects.equals(isDirectory, meta.isDirectory);
     }
 
-    public void setDriectory(Boolean driectory) {
-        isDriectory = driectory;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, path, isDirectory);
+    }
+
+    @Override
+    public String toString() {
+        return "FileMeta{" +
+                "name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", isDirectory=" + isDirectory +
+                '}';
+    }
+
+    public Boolean getDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(Boolean directory) {
+        isDirectory = directory;
     }
 
     public String getName() {
@@ -92,6 +125,10 @@ public class FileMeta {
         return lastModifiedText;
     }
 
+    public void setLastModifiedText(String lastModifiedText) {
+        this.lastModifiedText = lastModifiedText;
+    }
+
     public String getPinyin() {
         return pinyin;
     }
@@ -106,27 +143,5 @@ public class FileMeta {
 
     public void setPinyinFirst(String pinyinFirst) {
         this.pinyinFirst = pinyinFirst;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FileMeta meta = (FileMeta) o;
-        return Objects.equals(name, meta.name) && Objects.equals(path, meta.path) && Objects.equals(isDriectory, meta.isDriectory);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, path, isDriectory);
-    }
-
-    @Override
-    public String toString() {
-        return "FileMeta{" + "name='" + name + '\'' + ", path='" + path + '\'' + ", isDriectory=" + isDriectory + '}';
-    }
-
-    public void setLastModifiedText(String lastModifiedText) {
-        this.lastModifiedText = lastModifiedText;
     }
 }
