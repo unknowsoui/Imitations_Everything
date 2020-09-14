@@ -81,7 +81,7 @@ public class FileSave implements ScanCallback {
             return metas;
         }catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException("查询文件信息出错，同学们检查sql查询语句", e);
+            throw new RuntimeException("查询文件信息出错，检查sql查询语句", e);
         }finally {//5.释放资源
             DBUtil.close(connection, ps, rs);
         }
@@ -117,7 +117,7 @@ public class FileSave implements ScanCallback {
             //3.执行sql
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("文件保存失败，同学们检查一下sql insert语句", e);
+            throw new RuntimeException("文件保存失败，检查一下sql insert语句", e);
         } finally {
             //4.释放资源
             DBUtil.close(connection, statement);
@@ -152,49 +152,9 @@ public class FileSave implements ScanCallback {
                     meta.getPath()+File.separator+meta.getName());
             ps.executeUpdate();
         }catch (Exception e){
-            throw new RuntimeException("删除文件信息出错，同学们需要检查delete语句", e);
+            throw new RuntimeException("删除文件信息出错，需要检查delete语句", e);
         }finally {
             DBUtil.close(connection, ps);
-        }
-    }
-
-    public static void main(String[] args) {
-//        DBInit.init();
-//        File file = new File("D:\\比特科技\\10班\\板书");
-//        FileSave fileSave = new FileSave();
-//        fileSave.save(file);
-//        fileSave.query(file.getParentFile());
-        List<FileMeta> locals = new ArrayList<>();
-        locals.add(new FileMeta("新建文件夹",
-                "D:\\TMP\\maven-test - 副本",
-                true, 0, new Date()));
-        locals.add(new FileMeta("中华人民共和国",
-                "D:\\TMP\\maven-test - 副本",
-                true, 0, new Date()));
-        locals.add(new FileMeta("阿凡达.txt",
-                "D:\\TMP\\maven-test - 副本\\中华人民共和国",
-                true, 0, new Date()));
-
-        List<FileMeta> metas = new ArrayList<>();
-        metas.add(new FileMeta("新建文件夹",
-                "D:\\TMP\\maven-test - 副本",
-                true, 0, new Date()));
-        metas.add(new FileMeta("中华人民共和国2",
-                "D:\\TMP\\maven-test - 副本",
-                true, 0, new Date()));
-        metas.add(new FileMeta("阿凡达.txt",
-                "D:\\TMP\\maven-test - 副本\\中华人民共和国2",
-                true, 0, new Date()));
-
-        // 集合中是否包含某个元素，不一定代表传入这个对象在Java内存中是同一个对象的引用
-        // 满足一定条件（集合中的元素类型需要重写hashCode和equals
-        // ---->业务需要哪些属性来判断元素同一个），
-        // list.contains方法可以返回true
-//        Boolean contains = locals.contains(new FileMeta(new File("")));
-        for(FileMeta meta : locals){
-            if(!metas.contains(meta)){
-                System.out.println(meta);
-            }
         }
     }
 }

@@ -60,7 +60,7 @@ public class DBUtil {
             // 获取target/classes文件夹的父目录路径
             String dir = new File(classesURL.getPath()).getParent();
             // String dir = "D:/TMP";
-            String url = "jdbc:sqlite://" + dir + File.separator + "everything-like.db";
+            String url = "jdbc:sqlite://" + dir + File.separator + "Imitations-Everything.db";
             // new SqliteDateSource()，把这个对象的url设置进去，才会创建这个文件，如果
             // 文件已经存在，就会读取这个文件
             url = URLDecoder.decode(url, "UTF-8");
@@ -79,17 +79,6 @@ public class DBUtil {
      */
     public static Connection getConnection() throws SQLException {
         return getDataSource().getConnection();
-    }
-
-    public static void main(String[] args) throws SQLException {
-        for(int i=0; i<10; i++){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    DataSource dataSource = DBUtil.getDataSource();
-                }
-            }).start();
-        }
     }
 
     public static void close(Connection connection, Statement statement) {

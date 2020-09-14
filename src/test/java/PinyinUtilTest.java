@@ -2,6 +2,9 @@ import org.junit.Test;
 import util.PinyinUtil;
 
 public class PinyinUtilTest {
+    /**
+     * 测试确定是否为中文字符的功能
+     */
     @Test
     public void testCChinese(){
         String s = "汉语";
@@ -24,5 +27,19 @@ public class PinyinUtilTest {
         System.out.println(PinyinUtil.containsChinese(s8));
         String s9 = "45::";
         System.out.println(PinyinUtil.containsChinese(s9));
+    }
+
+    /**
+     * 测试关于字符串的处理
+     */
+    @Test
+    public void testGet(){
+        PinyinUtil.get("在 萨迪      ");
+        PinyinUtil.get("发の");
+        PinyinUtil.get("发의.");
+        PinyinUtil.get("6543发");
+        PinyinUtil.get("AD发");
+        PinyinUtil.get("12发 ");
+        PinyinUtil.get("*766发");
     }
 }

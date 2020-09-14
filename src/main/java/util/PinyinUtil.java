@@ -152,21 +152,9 @@ public class PinyinUtil {
         String[] result = new String[pinyins1.length * pinyins2.length];
         for(int i=0; i<pinyins1.length; i++){
             for(int j=0; j<pinyins2.length; j++){
-                result[i*pinyins2.length+j] = pinyins1[i]+pinyins2[j];
+                result[i * pinyins2.length + j] = pinyins1[i]+pinyins2[j];
             }
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println("abc".matches(".*[a-z].*"));
-//        System.out.println(Arrays.toString(get("中华人民共和国")));
-//        System.out.println(Arrays.toString(get("中华1人b民A共和国")));
-//
-//        System.out.println(Arrays.toString(
-//                compose(get("和长和", true))));
-//        System.out.println(Arrays.toString(
-//                compose(get("和长和", false))));
     }
 }

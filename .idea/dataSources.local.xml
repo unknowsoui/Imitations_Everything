@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="Sqlite (Xerial) - everything-like.db" uuid="d64e554a-1de2-4904-8df8-2eef31f797ad">
+    <data-source name="Sqlite (Xerial) - Imitations-Everything.db" uuid="d64e554a-1de2-4904-8df8-2eef31f797ad">
       <database-info product="SQLite" version="3.25.1" jdbc-version="2.1" driver-name="SQLite JDBC" driver-version="3.25.1" family="SQLITE" exact-version="3.25.1">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
